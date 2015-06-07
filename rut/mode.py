@@ -1,5 +1,7 @@
 import abc
 
+import rut.keys as keys
+
 class Mode(object):
     """
     Mode objects represent the mode that a Controller is using to interpret
@@ -45,6 +47,7 @@ class NormalMode(Mode):
         super(NormalMode, self).__init__(controller)
         self.commands = {
                 ":": lambda: self.switch_to(ExMode),
+                "i": lambda: self.switch_to(InsertMode),
                 "r": lambda: self.switch_to(ReplaceMode),
                 "h": lambda: self.pane.move("left"),
                 "j": lambda: self.pane.move("down"),
@@ -56,9 +59,27 @@ class NormalMode(Mode):
         if key in self.commands:
             self.commands[key]()
 
+
 class ReplaceMode(Mode):
 
     def send_key(self, key):
         row, col = self.pane.get_cursor()
         self.pane.replace(row, col, key)
         self.switch_to(NormalMode)
+
+
+class InsertMode(Mode):
+
+    def __init__(self, controller):
+        super(InsertMode, self).__init__(controller)
+        self.commands = {
+                keys.ESC: lambda: self.switch_to(NormalMode),
+                }
+
+    def send_key(self, key):
+        if key in self.commands:
+            self.commands[key]()
+        else:
+            row, col = self.pane.get_cursor()
+            self.pane.insert(row, col, key)
+            self.pane.move("insert-right")

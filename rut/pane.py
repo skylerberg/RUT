@@ -67,6 +67,11 @@ class Pane(object):
         self.lines[row] = line[:col] + char + line[col + 1:]
         self.__notify_subscribers()
 
+    def insert(self, row, col, char):
+        line = self.lines[row]
+        self.lines[row] = line[:col] + char + line[col:]
+        self.__notify_subscribers()
+
     def get_lines(self):
         return self.lines
 
