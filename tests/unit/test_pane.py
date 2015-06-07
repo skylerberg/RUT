@@ -40,59 +40,6 @@ class TestPane(unittest.TestCase):
         pane = Pane()
         self.assertEquals((0, 0), pane.get_cursor())
 
-    def test_move_down(self):
-        pane = Pane(contents="line one\nline two")
-        pane.move("down")
-        self.assertEquals((1, 0), pane.get_cursor())
-
-    def test_move_right(self):
-        pane = Pane(contents="line one\nline two")
-        pane.move("right")
-        self.assertEquals((0, 1), pane.get_cursor())
-
-    def test_move_left(self):
-        pane = Pane(contents="line one\nline two")
-        pane.move("left")
-        self.assertEquals((0, 0), pane.get_cursor())
-
-    def test_move_up(self):
-        pane = Pane(contents="line one\nline two")
-        pane.move("up")
-        self.assertEquals((0, 0), pane.get_cursor())
-
-    def test_move_right_and_left(self):
-        pane = Pane(contents="line one\nline two")
-        pane.move("right")
-        pane.move("left")
-        self.assertEquals((0, 0), pane.get_cursor())
-
-    def test_move_down_and_up(self):
-        pane = Pane(contents="line one\nline two")
-        pane.move("down")
-        pane.move("up")
-        self.assertEquals((0, 0), pane.get_cursor())
-
-    def test_get_line_count(self):
-        pane = Pane(contents="line one\nline two")
-        self.assertEquals(2, pane.get_line_count())
-
-    def test_move_below_last_line(self):
-        pane = Pane(contents="line one\nline two")
-        pane.move("down")
-        pane.move("down")
-        self.assertEquals((1, 0), pane.get_cursor())
-
-    def test_move_past_last_col(self):
-        pane = Pane(contents="12\n34\n56")
-        pane.move("right")
-        pane.move("right")
-        self.assertEquals((0, 1), pane.get_cursor())
-
-    def test_replace(self):
-        pane = Pane(contents="line one\nline two")
-        pane.replace(0, 0, 'w')
-        self.assertEquals("wine one\nline two", str(pane))
-
     def test_replace_at_end_of_pane(self):
         pane = Pane(contents="a\ntest")
         pane.replace(1, 3, 's')
@@ -102,6 +49,66 @@ class TestPane(unittest.TestCase):
         pane = Pane(contents="line one\nline two")
         self.assertEquals(pane.get_lines()[0], "line one")
 
+    def test_replace(self):
+        pane = Pane(contents="line one\nline two")
+        pane.replace(0, 0, 'w')
+        self.assertEquals("wine one\nline two", str(pane))
+
+    def test_get_line_count(self):
+        pane = Pane(contents="line one\nline two")
+        self.assertEquals(2, pane.get_line_count())
+
+
+class TestNavigation(unittest.TestCase):
+
+    def setUp(self):
+        self.pane = Pane(contents="line one\nline two\nline three")
+
+    def test_move_down(self):
+        self.pane.move_down()
+        self.assertEquals((1, 0), self.pane.get_cursor())
+
+    def test_move_right(self):
+        self.pane.move_right()
+        self.assertEquals((0, 1), self.pane.get_cursor())
+
+    def test_move_left(self):
+        self.pane.move_left()
+        self.assertEquals((0, 0), self.pane.get_cursor())
+
+    def test_move_up(self):
+        self.pane.move_up()
+        self.assertEquals((0, 0), self.pane.get_cursor())
+
+    def test_move_right_and_left(self):
+        self.pane.move_right()
+        self.pane.move_left()
+        self.assertEquals((0, 0), self.pane.get_cursor())
+
+    def test_move_down_and_up(self):
+        self.pane.move_down()
+        self.pane.move_up()
+        self.assertEquals((0, 0), self.pane.get_cursor())
+
+    def test_move_below_last_line(self):
+        self.pane.move_down()
+        self.pane.move_down()
+        self.pane.move_down()
+        self.assertEquals((2, 0), self.pane.get_cursor())
+
+    def test_move_past_last_col(self):
+        pane = Pane(contents="12\n34\n56")
+        pane.move_right()
+        pane.move_right()
+        self.assertEquals((0, 1), pane.get_cursor())
+
+    def test_goto_last(self):
+        self.pane.goto_last()
+        self.assertEquals((2, 0), self.pane.get_cursor())
+
+    def test_goto_first(self):
+        self.pane.goto_first()
+        self.assertEquals((0, 0), self.pane.get_cursor())
 
 class TestObserverPattern(unittest.TestCase):
 
@@ -119,10 +126,6 @@ class TestObserverPattern(unittest.TestCase):
 
     def test_append_notifies(self):
         self.pane.append("")
-        self.assertEquals(self.pane, self.notified_by)
-
-    def test_move_notifies(self):
-        self.pane.move("down")
         self.assertEquals(self.pane, self.notified_by)
 
     def test_replace_notifies(self):

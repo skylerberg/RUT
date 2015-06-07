@@ -40,19 +40,6 @@ class Pane(object):
         self.lines += string.split('\n')
         self.__notify_subscribers()
 
-    def move(self, direction):
-        if direction == "down":
-            self.row = min(self.get_line_count() - 1, self.row + 1)
-            self.col = max(min(len(self.lines[self.row]) -1, self.col), 0)
-        elif direction == "up":
-            self.row = max(0, self.row - 1)
-            self.col = max(min(len(self.lines[self.row]) -1, self.col), 0)
-        elif direction == "right":
-            self.col = max(min(len(self.lines[self.row]) - 1, self.col + 1), 0)
-        elif direction == "left":
-            self.col = max(0, self.col - 1)
-        self.__notify_subscribers()
-
     def get_line_count(self):
         return len(self.lines)
 
@@ -81,3 +68,35 @@ class Pane(object):
 
     def __str__(self):
         return '\n'.join(self.lines)
+
+    # Navigation functions
+
+    def move_down(self):
+        self.row = min(self.get_line_count() - 1, self.row + 1)
+        self.col = max(min(len(self.lines[self.row]) -1, self.col), 0)
+        self.__notify_subscribers()
+
+    def move_up(self):
+        self.row = max(0, self.row - 1)
+        self.col = max(min(len(self.lines[self.row]) -1, self.col), 0)
+        self.__notify_subscribers()
+
+    def move_right(self):
+        self.col = max(min(len(self.lines[self.row]) - 1, self.col + 1), 0)
+        self.__notify_subscribers()
+
+    def move_left(self):
+        self.col = max(0, self.col - 1)
+        self.__notify_subscribers()
+
+    def move_insert_right(self):
+        self.col = max(min(len(self.lines[self.row]), self.col + 1), 0)
+        self.__notify_subscribers()
+
+    def goto_first(self):
+        self.row = 0
+        self.__notify_subscribers()
+
+    def goto_last(self):
+        self.row = len(self.lines) - 1
+        self.__notify_subscribers()

@@ -49,10 +49,11 @@ class NormalMode(Mode):
                 ":": lambda: self.switch_to(ExMode),
                 "i": lambda: self.switch_to(InsertMode),
                 "r": lambda: self.switch_to(ReplaceMode),
-                "h": lambda: self.pane.move("left"),
-                "j": lambda: self.pane.move("down"),
-                "k": lambda: self.pane.move("up"),
-                "l": lambda: self.pane.move("right"),
+                "h": self.pane.move_left,
+                "j": self.pane.move_down,
+                "k": self.pane.move_up,
+                "l": self.pane.move_right,
+                "G": self.pane.goto_last,
                 }
 
     def send_key(self, key):
