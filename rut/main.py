@@ -11,10 +11,10 @@ def main():
         pane = Pane()
     display = Tui(pane)
     controller = Controller(pane)
+    display.display_pane(pane)
     try:
         while True:
-            display.display_pane(pane)
-            controller.send_key(chr(display.get_input()))
+            controller.send_key(display.get_input())
     except:
         display.end()
         traceback.print_exc(file=sys.stdout)

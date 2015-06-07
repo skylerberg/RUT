@@ -1,5 +1,7 @@
 import curses
 
+from rut.keys import *
+
 class Tui(object):
 
     def __init__(self, pane):
@@ -75,7 +77,14 @@ class Tui(object):
         return lines
 
     def get_input(self):
-        return self.screen.getch()
+        result = self.screen.getch()
+        if result == 27:
+            self.screen.nodelay(True)
+            next_char = self.screen.getch()  # TODO handle it if it is alt
+            self.screen.nodelay(False)
+            if next_char == -1:
+                return ESC
+        return chr(result)
 
     def end(self):
         curses.endwin()
