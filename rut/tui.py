@@ -3,8 +3,9 @@ import curses
 class Tui(object):
 
     def __init__(self, pane):
-        self.screen = self._build_screen()
+        self.screen = curses.initscr()
         self.pane = pane
+        self.scroll = 0
         curses.curs_set(1)
         curses.noecho()
         pane.add_subscriber(self)
@@ -21,37 +22,44 @@ class Tui(object):
         physical += logical_col / self.__width()
         return physical, logical_col % self.__width()
 
-    def _build_screen(self):
-        return curses.initscr()
-
     def notify(self, pane):
         self.display_pane(pane)
 
     def display_pane(self, pane):
         self.screen.clear()
+        self.set_scroll(*pane.get_cursor())
         self._draw_string(str(pane))
         self.set_cursor(*pane.get_cursor())
         self.screen.refresh()
 
+    def set_scroll(self, logical_row, logical_col):
+        row, _ = self._get_physical_position(logical_row, logical_col)
+        height = self.__height()
+        if row < self.scroll:
+            self.scroll = row
+        if row >= self.scroll + height - 1:
+            self.scroll += row - (height + self.scroll) + 2
+
     def set_cursor(self, logical_row, logical_col):
         row, col = self._get_physical_position(logical_row, logical_col)
-        self.screen.move(row, col)
+        self.screen.move(min(row - self.scroll, self.__height()), col)
 
     def _draw_string(self, string):
-        rows, _ = self.screen.getmaxyx()
+        height = self.__height()
         lines = self.__split_into_lines(string)
         for i, line in enumerate(lines):
-            if i == rows - 1:
+            if i == self.scroll + height - 1:
                 break
-            self.screen.addstr(i, 0, line)
+            if i >= self.scroll:
+                self.screen.addstr(i - self.scroll, 0, line)
 
     def __width(self):
-        height, width = self.screen.getmaxyx()
+        _, width = self.screen.getmaxyx()
         return width
 
     def __height(self):
-        height, width = self.screen.getmaxyx()
-        return width
+        height, _ = self.screen.getmaxyx()
+        return height
 
     def __split_into_lines(self, string):
         width = self.__width()
