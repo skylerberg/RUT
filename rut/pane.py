@@ -65,6 +65,9 @@ class Pane(object):
         self.lines[row] = line[:col] + char + line[col + 1:]
         self.__notify_subscribers()
 
+    def get_lines(self):
+        return self.lines
+
     def __notify_subscribers(self):
         for subscriber in self.subscribers:
             subscriber.notify(self)

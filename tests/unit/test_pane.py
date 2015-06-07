@@ -98,6 +98,9 @@ class TestPane(unittest.TestCase):
         pane.replace(1, 3, 's')
         self.assertEquals("a\ntess", str(pane))
 
+    def test_lines(self):
+        pane = Pane(contents="line one\nline two")
+        self.assertEquals(pane.get_lines()[0], "line one")
 
 
 class TestObserverPattern(unittest.TestCase):
