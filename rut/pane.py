@@ -43,12 +43,14 @@ class Pane(object):
     def move(self, direction):
         if direction == "down":
             self.row = min(self.get_line_count() - 1, self.row + 1)
-        elif direction == "right":
-            self.col = min(len(self.lines[self.row]) - 1, self.col + 1)
-        elif direction == "left":
-            self.col = max(0, self.col - 1)
+            self.col = max(min(len(self.lines[self.row]) -1, self.col), 0)
         elif direction == "up":
             self.row = max(0, self.row - 1)
+            self.col = max(min(len(self.lines[self.row]) -1, self.col), 0)
+        elif direction == "right":
+            self.col = max(min(len(self.lines[self.row]) - 1, self.col + 1), 0)
+        elif direction == "left":
+            self.col = max(0, self.col - 1)
         self.__notify_subscribers()
 
     def get_line_count(self):

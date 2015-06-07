@@ -18,7 +18,8 @@ class Tui(object):
             if line_number == logical_row:
                 break
             length = len(line) - 1  # Don't count newline
-            physical += length / self.__width()
+            if length > self.__width():
+                physical += length / self.__width()
         physical += logical_col / self.__width()
         return physical, logical_col % self.__width()
 
@@ -42,7 +43,7 @@ class Tui(object):
 
     def set_cursor(self, logical_row, logical_col):
         row, col = self._get_physical_position(logical_row, logical_col)
-        self.screen.move(min(row - self.scroll, self.__height()), col)
+        self.screen.move(row - self.scroll, col)
 
     def _draw_string(self, string):
         height = self.__height()
