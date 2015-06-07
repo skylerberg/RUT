@@ -1,7 +1,5 @@
 import abc
 
-import rut.commands as commands
-
 class Mode(object):
     """
     Mode objects represent the mode that a Controller is using to interpret
@@ -28,7 +26,7 @@ class ExMode(Mode):
     def __init__(self, controller):
         super(ExMode, self).__init__(controller)
         self.commands = {
-                "q": commands.quit,
+                "q": exit,
                 "w": self.pane.save,
                 }
 
