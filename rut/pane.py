@@ -93,10 +93,18 @@ class Pane(object):
         self.col = max(min(len(self.lines[self.row]), self.col + 1), 0)
         self.__notify_subscribers()
 
-    def goto_first(self):
+    def goto_first_row(self):
         self.row = 0
         self.__notify_subscribers()
 
-    def goto_last(self):
+    def goto_last_row(self):
         self.row = len(self.lines) - 1
+        self.__notify_subscribers()
+
+    def goto_first_column(self):
+        self.col = 0
+        self.__notify_subscribers()
+
+    def goto_last_column(self):
+        self.col = len(self.lines[self.row]) - 1
         self.__notify_subscribers()

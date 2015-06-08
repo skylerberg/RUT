@@ -102,13 +102,24 @@ class TestNavigation(unittest.TestCase):
         pane.move_right()
         self.assertEquals((0, 1), pane.get_cursor())
 
-    def test_goto_last(self):
-        self.pane.goto_last()
+    def test_goto_last_row(self):
+        self.pane.goto_last_row()
         self.assertEquals((2, 0), self.pane.get_cursor())
 
-    def test_goto_first(self):
-        self.pane.goto_first()
+    def test_goto_first_row(self):
+        self.pane.goto_first_row()
         self.assertEquals((0, 0), self.pane.get_cursor())
+
+    def test_goto_first_column(self):
+        self.pane.move_right()
+        self.pane.move_right()
+        self.pane.goto_first_column()
+        self.assertEquals((0, 0), self.pane.get_cursor())
+
+    def test_goto_last_column(self):
+        self.pane.goto_last_column()
+        self.assertEquals((0, 7), self.pane.get_cursor())
+
 
 class TestObserverPattern(unittest.TestCase):
 

@@ -16,4 +16,4 @@ class TestController(unittest.TestCase):
     def test_clear_command(self):
         controller = Controller()
         with self.assertRaises(SystemExit):
-            controller.send_keys("asdf\n:q\n")
+            controller.send_keys(",,,\n:q\n")
