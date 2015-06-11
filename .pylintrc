@@ -2,4 +2,4 @@
 
 [MESSAGES CONTROL]
 
-disable=missing-docstring,fixme
+disable=missing-docstring,fixme,too-few-public-methods,abstract-class-little-used

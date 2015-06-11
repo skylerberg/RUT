@@ -1,11 +1,13 @@
 import curses
 
 import rut.keys as keys
+from rut.observer import Observer
 
 
-class Tui(object):
+class Tui(Observer):
 
     def __init__(self, pane, cursor):
+        super(Tui, self).__init__()
         self.screen = curses.initscr()
         self.pane = pane
         self.cursor = cursor
@@ -28,7 +30,7 @@ class Tui(object):
         physical += logical_col / self.__width()
         return physical, logical_col % self.__width()
 
-    def notify(self, notifier):
+    def notify(self, notifier):  # pylint: disable=unused-argument
         self.display_pane()
 
     def display_pane(self):
