@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/skylerberg/RUT.png)](https://travis-ci.org/skylerberg/RUT)
+
 # RUT - Redundant Underwhelming Text Editor
 I am building this editor as a learning experience. I do not anticipate it
 being a useful product.
