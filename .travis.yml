@@ -3,4 +3,7 @@ python:
   - 2.7
 install: 
   - pip install -r requirements.txt --use-mirrors
-script: nosetests
+script: 
+  - nosetests
+  - pylint --rcfile=.pylintrc rut tests/unit
+  - flake8 rut tests/unit
