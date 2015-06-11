@@ -15,6 +15,7 @@ class Mode(object):
     def __init__(self, controller):
         self.controller = controller
         self.pane = self.controller.get_pane()
+        self.cursor = self.controller.get_cursor()
         self.current_command = ""
         self.commands = HashTrie()
 
@@ -67,33 +68,33 @@ class NormalMode(Mode):
             "i": lambda: self.switch_to(InsertMode),
             "a": _steps(
                 lambda: self.switch_to(InsertMode),
-                self.pane.move_insert_right,
+                self.cursor.move_insert_right,
                 ),
             "A": _steps(
-                self.pane.goto_last_column,
+                self.cursor.goto_last_column,
                 lambda: self.switch_to(InsertMode),
-                self.pane.move_insert_right,
+                self.cursor.move_insert_right,
                 ),
             "gI": _steps(
-                self.pane.goto_first_column,
+                self.cursor.goto_first_column,
                 lambda: self.switch_to(InsertMode),
                 ),
             "r": lambda: self.switch_to(ReplaceMode),
-            "h": self.pane.move_left,
-            "j": self.pane.move_down,
-            "k": self.pane.move_up,
-            "l": self.pane.move_right,
-            "G": self.pane.goto_last_row,
-            "gg": self.pane.goto_first_row,
-            "0": self.pane.goto_first_column,
-            "$": self.pane.goto_last_column,
+            "h": self.cursor.move_left,
+            "j": self.cursor.move_down,
+            "k": self.cursor.move_up,
+            "l": self.cursor.move_right,
+            "G": self.cursor.goto_last_row,
+            "gg": self.cursor.goto_first_row,
+            "0": self.cursor.goto_first_column,
+            "$": self.cursor.goto_last_column,
             })
 
 
 class ReplaceMode(Mode):
 
     def send_key(self, key):
-        row, col = self.pane.get_cursor()
+        row, col = self.cursor.get_cursor()
         self.pane.replace(row, col, key)
         self.switch_to(NormalMode)
 
@@ -110,6 +111,6 @@ class InsertMode(Mode):
         if key in self.commands:
             self.commands[key]()
         else:
-            row, col = self.pane.get_cursor()
+            row, col = self.cursor.get_cursor()
             self.pane.insert(row, col, key)
-            self.pane.move_insert_right()
+            self.cursor.move_insert_right()

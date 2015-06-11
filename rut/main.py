@@ -11,9 +11,9 @@ def main():
         pane = Pane(path=sys.argv[1])
     else:
         pane = Pane()
-    display = Tui(pane)
     controller = Controller(pane)
-    display.display_pane(pane)
+    display = Tui(pane, controller.cursor)
+    display.display_pane()
     try:
         while True:
             controller.send_key(display.get_input())

@@ -5,15 +5,17 @@ import rut.keys as keys
 
 class Tui(object):
 
-    def __init__(self, pane):
+    def __init__(self, pane, cursor):
         self.screen = curses.initscr()
         self.pane = pane
+        self.cursor = cursor
         self.scroll = 0
         curses.curs_set(1)
         curses.noecho()
         pane.add_subscriber(self)
+        cursor.add_subscriber(self)
         self.screen.scrollok(1)
-        self.display_pane(pane)
+        self.display_pane()
 
     def _get_physical_position(self, logical_row, logical_col):
         physical = logical_row
@@ -26,14 +28,14 @@ class Tui(object):
         physical += logical_col / self.__width()
         return physical, logical_col % self.__width()
 
-    def notify(self, pane):
-        self.display_pane(pane)
+    def notify(self, notifier):
+        self.display_pane()
 
-    def display_pane(self, pane):
+    def display_pane(self):
         self.screen.clear()
-        self.set_scroll(*pane.get_cursor())
-        self._draw_string(str(pane))
-        self.set_cursor(*pane.get_cursor())
+        self.set_scroll(*self.cursor.get_cursor())
+        self._draw_string(str(self.pane))
+        self.set_cursor(*self.cursor.get_cursor())
         self.screen.refresh()
 
     def set_scroll(self, logical_row, logical_col):

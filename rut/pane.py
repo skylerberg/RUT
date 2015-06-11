@@ -1,6 +1,10 @@
-class Pane(object):
+from rut.observer import Observable
+
+
+class Pane(Observable):
 
     def __init__(self, contents="", path=None):
+        super(Pane, self).__init__()
         self.path = path
         if path is not None:
             self.lines = []
@@ -11,10 +15,7 @@ class Pane(object):
             self.lines = contents.split('\n')
         else:
             self.lines = []
-        self.row = 0
-        self.col = 0
         self.line_count = None
-        self.subscribers = []
 
     def save_preview(self):
         """
@@ -38,73 +39,23 @@ class Pane(object):
 
     def append(self, string):
         self.lines += string.split('\n')
-        self.__notify_subscribers()
+        self.notify_subscribers()
 
     def get_line_count(self):
         return len(self.lines)
 
-    def get_cursor(self):
-        return self.row, self.col
-
-    def add_subscriber(self, subscriber):
-        self.subscribers.append(subscriber)
-
     def replace(self, row, col, char):
         line = self.lines[row]
         self.lines[row] = line[:col] + char + line[col + 1:]
-        self.__notify_subscribers()
+        self.notify_subscribers()
 
     def insert(self, row, col, char):
         line = self.lines[row]
         self.lines[row] = line[:col] + char + line[col:]
-        self.__notify_subscribers()
+        self.notify_subscribers()
 
     def get_lines(self):
         return self.lines
 
-    def __notify_subscribers(self):
-        for subscriber in self.subscribers:
-            subscriber.notify(self)
-
     def __str__(self):
         return '\n'.join(self.lines)
-
-    # Navigation functions
-
-    def move_down(self):
-        self.row = min(self.get_line_count() - 1, self.row + 1)
-        self.col = max(min(len(self.lines[self.row]) - 1, self.col), 0)
-        self.__notify_subscribers()
-
-    def move_up(self):
-        self.row = max(0, self.row - 1)
-        self.col = max(min(len(self.lines[self.row]) - 1, self.col), 0)
-        self.__notify_subscribers()
-
-    def move_right(self):
-        self.col = max(min(len(self.lines[self.row]) - 1, self.col + 1), 0)
-        self.__notify_subscribers()
-
-    def move_left(self):
-        self.col = max(0, self.col - 1)
-        self.__notify_subscribers()
-
-    def move_insert_right(self):
-        self.col = max(min(len(self.lines[self.row]), self.col + 1), 0)
-        self.__notify_subscribers()
-
-    def goto_first_row(self):
-        self.row = 0
-        self.__notify_subscribers()
-
-    def goto_last_row(self):
-        self.row = len(self.lines) - 1
-        self.__notify_subscribers()
-
-    def goto_first_column(self):
-        self.col = 0
-        self.__notify_subscribers()
-
-    def goto_last_column(self):
-        self.col = len(self.lines[self.row]) - 1
-        self.__notify_subscribers()
