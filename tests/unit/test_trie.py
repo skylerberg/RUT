@@ -3,6 +3,7 @@ import unittest
 
 from rut.trie import HashTrie
 
+
 class TestHashTrie(unittest.TestCase):
 
     def setUp(self):

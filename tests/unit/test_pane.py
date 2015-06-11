@@ -3,6 +3,7 @@ import unittest
 
 from rut.pane import Pane
 
+
 class TestPane(unittest.TestCase):
 
     def test_create(self):

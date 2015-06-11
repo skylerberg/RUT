@@ -1,6 +1,7 @@
 from rut.mode import NormalMode
 from rut.pane import Pane
 
+
 class Controller(object):
     def __init__(self, pane=None):
         if pane is None:

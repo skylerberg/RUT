@@ -73,12 +73,12 @@ class Pane(object):
 
     def move_down(self):
         self.row = min(self.get_line_count() - 1, self.row + 1)
-        self.col = max(min(len(self.lines[self.row]) -1, self.col), 0)
+        self.col = max(min(len(self.lines[self.row]) - 1, self.col), 0)
         self.__notify_subscribers()
 
     def move_up(self):
         self.row = max(0, self.row - 1)
-        self.col = max(min(len(self.lines[self.row]) -1, self.col), 0)
+        self.col = max(min(len(self.lines[self.row]) - 1, self.col), 0)
         self.__notify_subscribers()
 
     def move_right(self):

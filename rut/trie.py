@@ -1,5 +1,6 @@
 from collections import MutableMapping
 
+
 class HashTrie(MutableMapping):
 
     def __init__(self, *args, **kwargs):

@@ -1,6 +1,7 @@
 import curses
 
-from rut.keys import *
+import rut.keys as keys
+
 
 class Tui(object):
 
@@ -83,8 +84,8 @@ class Tui(object):
             next_char = self.screen.getch()  # TODO handle it if it is alt
             self.screen.nodelay(False)
             if next_char == -1:
-                return ESC
+                return keys.ESC
         return chr(result)
 
-    def end(self):
+    def end(self):  # pylint: disable=no-self-use
         curses.endwin()

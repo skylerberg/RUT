@@ -3,6 +3,7 @@ import unittest
 
 from rut.controller import Controller
 
+
 class TestController(unittest.TestCase):
 
     def test_create(self):
