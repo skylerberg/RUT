@@ -37,22 +37,22 @@ class Pane(Observable):
     def save(self):
         self.save_as(self.path)
 
+    @Observable.notify_after
     def append(self, string):
         self.lines += string.split('\n')
-        self.notify_subscribers()
 
     def get_line_count(self):
         return len(self.lines)
 
+    @Observable.notify_after
     def replace(self, row, col, char):
         line = self.lines[row]
         self.lines[row] = line[:col] + char + line[col + 1:]
-        self.notify_subscribers()
 
+    @Observable.notify_after
     def insert(self, row, col, char):
         line = self.lines[row]
         self.lines[row] = line[:col] + char + line[col:]
-        self.notify_subscribers()
 
     def get_lines(self):
         return self.lines

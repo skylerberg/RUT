@@ -1,11 +1,30 @@
+import abc
+
+
 class Observable(object):
+    __metaclass__ = abc.ABCMeta
 
     def __init__(self):
-        self.subscribers = []
+        self.__observers = []
 
-    def add_subscriber(self, subscriber):
-        self.subscribers.append(subscriber)
+    def add_observer(self, observer):
+        self.__observers.append(observer)
 
-    def notify_subscribers(self):
-        for subscriber in self.subscribers:
-            subscriber.notify(self)
+    def notify_observers(self):
+        for observer in self.__observers:
+            observer.notify(self)
+
+    @staticmethod
+    def notify_after(func):
+        def new_func(self, *args, **kwargs):
+            func(self, *args, **kwargs)
+            self.notify_observers()
+        return new_func
+
+
+class Observer(object):
+    __metaclass__ = abc.ABCMeta
+
+    @abc.abstractmethod
+    def notify(self, observable):
+        pass

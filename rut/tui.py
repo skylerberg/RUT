@@ -12,8 +12,8 @@ class Tui(object):
         self.scroll = 0
         curses.curs_set(1)
         curses.noecho()
-        pane.add_subscriber(self)
-        cursor.add_subscriber(self)
+        pane.add_observer(self)
+        cursor.add_observer(self)
         self.screen.scrollok(1)
         self.display_pane()
 
