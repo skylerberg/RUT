@@ -1,21 +1,25 @@
-from rut.observer import Observable
+from rut.text import TextRegion
+from rut.observer import Observable, Observer
 
 
-class Pane(Observable):
+class Pane(Observable, Observer):
 
     def __init__(self, contents="", path=None):
         super(Pane, self).__init__()
+        self.text = TextRegion()
         self.path = path
         if path is not None:
             self.lines = []
             with open(path, 'a+') as file_:
-                for line in file_:
-                    self.lines.append(line.rstrip('\n'))
+                file_contents = file_.read()
+                if file_contents and file_contents[-1]:
+                    file_contents = file_contents[:-1]
+                self.text.append(file_contents)
         elif contents:
-            self.lines = contents.split('\n')
-        else:
-            self.lines = []
-        self.line_count = None
+            self.text.append(contents)
+
+    def notify(self, observable):
+        self.notify_observers()
 
     def save_preview(self):
         """
@@ -37,25 +41,20 @@ class Pane(Observable):
     def save(self):
         self.save_as(self.path)
 
-    @Observable.notify_after
     def append(self, string):
-        self.lines += string.split('\n')
+        self.text.append(string)
 
     def get_line_count(self):
-        return len(self.lines)
+        return len(self.text.get_lines())
 
-    @Observable.notify_after
     def replace(self, row, col, char):
-        line = self.lines[row]
-        self.lines[row] = line[:col] + char + line[col + 1:]
+        self.text.replace(row, col, char)
 
-    @Observable.notify_after
     def insert(self, row, col, char):
-        line = self.lines[row]
-        self.lines[row] = line[:col] + char + line[col:]
+        self.text.insert(row, col, char)
 
     def get_lines(self):
-        return self.lines
+        return self.text.get_lines()
 
     def __str__(self):
-        return '\n'.join(self.lines)
+        return str(self.text)
