@@ -33,30 +33,33 @@ class Cursor(Observable):
 
     def move_down(self):
         self.row = min(self.pane.get_line_count() - 1, self.row + 1)
-        self.col = max(min(len(self.pane.lines[self.row]) - 1, self.col), 0)
+        column_count = len(self.pane.get_lines()[self.row])
+        self.col = max(min(column_count - 1, self.col), 0)
 
     def move_up(self):
         self.row = max(0, self.row - 1)
-        self.col = max(min(len(self.pane.lines[self.row]) - 1, self.col), 0)
+        column_count = len(self.pane.get_lines()[self.row])
+        self.col = max(min(column_count - 1, self.col), 0)
 
     def move_right(self):
-        self.col = max(min(len(self.pane.lines[self.row]) - 1, self.col + 1),
-                       0)
+        column_count = len(self.pane.get_lines()[self.row])
+        self.col = max(min(column_count - 1, self.col + 1), 0)
 
     def move_left(self):
         self.col = max(0, self.col - 1)
 
     def move_insert_right(self):
-        self.col = max(min(len(self.pane.lines[self.row]), self.col + 1), 0)
+        column_count = len(self.pane.get_lines()[self.row])
+        self.col = max(min(column_count, self.col + 1), 0)
 
     def goto_first_row(self):
         self.row = 0
 
     def goto_last_row(self):
-        self.row = len(self.pane.lines) - 1
+        self.row = len(self.pane.get_lines()) - 1
 
     def goto_first_column(self):
         self.col = 0
 
     def goto_last_column(self):
-        self.col = len(self.pane.lines[self.row]) - 1
+        self.col = len(self.pane.get_lines()[self.row]) - 1

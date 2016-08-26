@@ -16,12 +16,29 @@ class TestHashTrie(unittest.TestCase):
         self.trie[""] = ""
         self.assertTrue("" in self.trie)
 
+    def test_len_empty(self):
+        self.assertEquals(0, len(self.trie))
+
+    def test_add_empty_string_get_value(self):
+        self.trie[""] = 1
+        self.assertEquals(1, self.trie[""])
+
+    def test_fail_to_get_empty_string(self):
+        self.assertE
+
 
 class TestPopulatedHashTrie(unittest.TestCase):
 
     def setUp(self):
-        self.in_trie = set(["norma", "normal"])
-        self.trie = HashTrie(normal=True, norma=False)
+        self.in_trie = set(["norma", "normal", "other"])
+        self.trie = HashTrie(normal=True, norma=False, other=True)
+
+    def test_len_populated(self):
+        self.assertEquals(len(self.in_trie), len(self.trie))
+
+    def test_len_add_existing(self):
+        self.trie["other"] = False
+        self.assertEquals(len(self.in_trie), len(self.trie))
 
     def test_items_in_trie(self):
         for item in self.in_trie:
